@@ -1,0 +1,33 @@
+﻿body 
+{
+font-family: Geneva, Arial, Helvetica, sans-serif;
+font-size:14px; 
+}
+
+fieldset
+{
+border: 1px solid #507CD1;
+width: 20em
+}
+
+input
+{
+color: #000000;
+background: #EFF3FB;
+border: 1px solid #507CD1;
+}
+
+legend
+{
+color: #000000;
+background: #EFF3FB;
+border: 1px solid #507CD1;
+padding: 2px 6px
+} 
+
+.legend2
+{
+color: #000000;
+background: #FFFFFF;
+padding: 2px 6px
+} 
