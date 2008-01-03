@@ -47,7 +47,7 @@ public partial class _Default : System.Web.UI.Page
         else
         {
             Session["id"] = "";
-            Session["nivel"] = "";
+            Session["admin"] = "";
             e.Authenticated = false;
         }
 

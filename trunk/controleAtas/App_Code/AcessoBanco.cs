@@ -108,8 +108,6 @@ namespace AcessoBanco
                 {
                     m_Connection = new SqlConnection(m_ConnectionString);
                     m_Connection.Open();
-                    m_transaction = m_Connection.BeginTransaction();
-
                 }
                 catch (System.Exception e)
                 {
@@ -128,6 +126,9 @@ namespace AcessoBanco
                     throw e;
                 }
             }
+
+            m_transaction = m_Connection.BeginTransaction();
+
             return m_Connection;
         }
 

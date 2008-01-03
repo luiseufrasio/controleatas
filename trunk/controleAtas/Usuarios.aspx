@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Sistema de Solicitação e Autorização de Pagamentos</title>
+    <title>Sistema de Controle de Atas de Reunião</title>
     <link href="css/Geral.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -20,15 +20,15 @@
                 <div style="z-index: 114; left: 2%; width: 358px; position: absolute; top: 83%; height: 41px">
                     <asp:Button ID="Button5" runat="server" CssClass="button" Style="z-index: 100; left: 0%;
                         position: absolute; top: 20%" Text="Pesquisar" Width="85px" CausesValidation="False"
-                        OnClick="Button5_Click1" TabIndex="10" />
+                        OnClick="Button5_Click1" TabIndex="8" />
                     <asp:Button ID="Button6" runat="server" CssClass="button" Style="z-index: 101; left: 25%;
                         position: absolute; top: 20%" Text="Novo" Width="85px" CausesValidation="False"
-                        OnClick="Button6_Click" TabIndex="9" />
+                        OnClick="Button6_Click" TabIndex="7" />
                     <asp:Button ID="Button7" runat="server" CssClass="button" Style="z-index: 102; left: 50%;
-                        position: absolute; top: 20%" Text="Salvar" Width="85px" OnClick="Button7_Click" Height="21px" TabIndex="8" />
+                        position: absolute; top: 20%" Text="Salvar" Width="85px" OnClick="Button7_Click" Height="21px" TabIndex="6" />
                     <asp:Button ID="BtExcluir" runat="server" CssClass="button" Style="z-index: 104;
                         left: 75%; position: absolute; top: 20%" Text="Excluir" Width="85px" OnClick="BtExcluir_Click"
-                        CausesValidation="False" Enabled="false" Height="21px" TabIndex="11" />
+                        CausesValidation="False" Enabled="false" Height="21px" TabIndex="9" />
                 </div>
                 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                 <asp:Label ID="Label4" runat="server" Style="z-index: 100; left: 2%; position: absolute;
@@ -55,7 +55,7 @@
                     top: 46px" SetFocusOnError="True"></asp:RequiredFieldValidator>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtEmail"
                     ErrorMessage="* campo obrigatório" Style="z-index: 109; left: 335px; position: absolute;
-                    top: 88px" SetFocusOnError="True"></asp:RequiredFieldValidator>
+                    top: 89px" SetFocusOnError="True"></asp:RequiredFieldValidator>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="txtLogin"
                     ErrorMessage="* o campo Login é obrigatório" Style="z-index: 110; left: 336px;
                     position: absolute; top: 125px" SetFocusOnError="True"></asp:RequiredFieldValidator>
@@ -67,7 +67,7 @@
                     ErrorMessage="* e-mail inválido" Style="z-index: 112; left: 335px; position: absolute;
                     top: 89px" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" SetFocusOnError="True"></asp:RegularExpressionValidator>
                 <asp:CheckBox ID="chkAdmin" runat="server" Style="z-index: 115; left: 2%; position: absolute;
-                    top: 162px" Text="Administrador do Sistema" />
+                    top: 162px" Text="Administrador do Sistema" TabIndex="5" />
             </div>
         </fieldset>
         &nbsp;&nbsp;

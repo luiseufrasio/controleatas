@@ -6,7 +6,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
-    <title>Sistema de Solicitação e Autorização de Pagamentos</title>
+    <title>Sistema de Controle de Atas de Reunião</title>
 <script language="javascript" type="text/javascript">
 <!--
 

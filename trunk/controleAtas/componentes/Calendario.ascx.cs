@@ -90,7 +90,7 @@ public partial class Calendario : System.Web.UI.UserControl
     {
         get
         {
-            return EdCalendar.Text.Substring(6,4) + "-" + EdCalendar.Text.Substring(0,2) + "-" + EdCalendar.Text.Substring(3,2)+" ";
+            return EdCalendar.Text.Substring(6, 4) + "-" + EdCalendar.Text.Substring(3, 2) + "-" + EdCalendar.Text.Substring(0, 2) + " ";
         }
 
 
