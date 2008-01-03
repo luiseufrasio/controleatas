@@ -39,7 +39,7 @@ border-left:10px solid #FFFFFF;
     <ul id="menu" style="z-index: 100; left: 1px; position: absolute; top: 56px">
         <li id="sair"><a href="Sair.aspx"><u>Sair</u></a></li>
         <li id="alteracaosenha"><a href="AlteracaoSenha.aspx"><u>Alterar Senha</u></a></li>
-        <li id="cr"><a href="#">Criar Reunião</a></li>
+        <li id="cr"><a href="reunioes.aspx">Criar Reunião</a></li>
         <li id="cu" style="display: <%=Session["admin"].ToString().Equals("True") ? "block" : "none"%>;">
             <a href="Usuarios.aspx">Criar Usuário</a></li>
         <li id="ea"><a href="#">Escrever Ata</a></li>

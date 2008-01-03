@@ -25,6 +25,15 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
             txtNome.Text = dr["nome"].ToString().Trim();
             TxtSenha.Text = dr["senha"].ToString().Trim();
             txtEmail.Text = dr["email"].ToString().Trim();
+
+            if ("True".Equals(dr["admin"].ToString().Trim()))
+            {
+                chkAdmin.Checked = true;
+            }
+            else
+            {
+                chkAdmin.Checked = false;
+            }
         }
         dr.Close();
         dados.CloseDataSource();
@@ -52,7 +61,7 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                 string sql =
                     " Select * From Usuarios Where id = " + id +
                     " and id not in ((select idUsuario From Participantes) " +
-                    " union (select idSolicitante From Atas)) ";
+                    " union (select idUsuario From Atas)) ";
 
                 if (dados.SelectSqlReader(sql).Read())
                 {
@@ -69,7 +78,7 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
 
         try
         {
-            dados.OpenDataSourceTransaction();
+            dados.OpenDataSource();
 
             if (id == "")
             {
@@ -81,44 +90,29 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                     Util.SQLString(chkAdmin.Checked.ToString()) + ")";
                 id = dados.InsertSqlData(sql).ToString();
 
-                dados.committransacao();
                 Response.Write("<script>alert('Cadastro Realizado com Sucesso!');document.location.href='usuarios.aspx?cod=" + id + "';</script>");
             }
             else
             {
                 string sql = "update usuarios set nome = " +
-                    Util.SQLString(txtNome.Text) + ",idcasa = " +
-                    Util.SQLString(listCasas.SelectedValue) + ",idnivel = " +
-                    Util.SQLString(listNiveis.SelectedValue) + ",login=" +
+                    Util.SQLString(txtNome.Text) + ",login=" +
                     Util.SQLString(txtLogin.Text) + ",email=" +
-                    Util.SQLString(txtEmail.Text) +
+                    Util.SQLString(txtEmail.Text) + ",admin=" +
+                    Util.SQLString(chkAdmin.Checked.ToString()) +
                     " where id = " + id;
                 dados.UpdateSQLData(sql);
-                sql = "delete from usuariosdepartamentos where idusuario = " + id;
-                dados.DeleteSQLData(sql);
-                // departamentos
-                for (int i = 0; i <= CbDeptos.Items.Count - 1; i++)
-                //  foreach(ListItem  cb in CbDeptos )
-                {
-                    ListItem cb = CbDeptos.Items[i];
-                    if (cb.Selected)
-                    {
-                        sql = "INSERT INTO usuariosdepartamentos(idusuario,iddepartamento) values";
-                        sql = sql + "(" + id + "," + Util.SQLString(cb.Value.ToString()) + ")";
-                        dados.InsertSqlData(sql);
-                    }
-                }
 
-                dados.committransacao();
                 Response.Write("<script>alert('Cadastro Atualizado com Sucesso!')</script>");
-
                 preencher();
             }
         }
         catch
         {
-            dados.rollbacktransacao();
             Response.Write("<script>alert('Não foi possível realizar a operação, favor entre em contato com o responsável pelo sistema!')</script>");
+        }
+        finally
+        {
+            dados.CloseDataSource();
         }
     }
 
@@ -128,17 +122,18 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
 
         try
         {
-            dados.OpenDataSourceTransaction();
-            dados.DeleteSQLData("delete from usuariosdepartamentos where idusuario =" + id);
+            dados.OpenDataSource();
             dados.DeleteSQLData("delete from usuarios where id =" + id);
 
-            dados.committransacao();
             Response.Write("<script>alert('Cadastro Excluído com Sucesso!');document.location.href='Usuarios.aspx';</script>");
         }
         catch
         {
-            dados.rollbacktransacao();
             Response.Write("<script>alert('Não foi possível realizar a operação, favor entre em contato com o responsável pelo sistema!')</script>");
+        }
+        finally
+        {
+            dados.CloseDataSource();
         }
     }
 
