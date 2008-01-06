@@ -100,14 +100,16 @@ namespace AcessoBanco
 
         public SqlConnection OpenDataSourceTransaction()
         {
+		this.CloseDataSource();
+
             //Testa se a conexão existe
             if (m_Connection == null)
             {
-
                 try
                 {
                     m_Connection = new SqlConnection(m_ConnectionString);
                     m_Connection.Open();
+                    m_transaction = m_Connection.BeginTransaction();
                 }
                 catch (System.Exception e)
                 {
@@ -126,8 +128,6 @@ namespace AcessoBanco
                     throw e;
                 }
             }
-
-            m_transaction = m_Connection.BeginTransaction();
 
             return m_Connection;
         }
