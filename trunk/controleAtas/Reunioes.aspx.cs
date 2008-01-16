@@ -19,12 +19,13 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
     protected void preencher()
     {
         CDataService dados = new CDataService("controleAtas");
-        string sql =
-            " SELECT r.*, p.idUsuario as user, u.nomeCriador " +
+        string sql =" SELECT r.*,convert(varchar(10),datahora,103) as data, p.idUsuario as usu, u.nome as nomeCriador " +
             " FROM Reunioes r, Participantes p, Usuarios u " +
             " WHERE r.id = p.idReuniao AND " +
             " r.idCriador = u.id AND " +
             " r.id = " + id;
+       // Response.Write(sql);
+       // Response.End();
 
         SqlDataReader dr = dados.SelectSqlReader(sql);
         int i = 0;
@@ -35,13 +36,15 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
             {
                 txtAssunto.Text = dr["assunto"].ToString().Trim();
                 txtLocal.Text = dr["local"].ToString().Trim();
-                DtReuniao.Text = dr["dataHora"].ToString().Trim();
-                lblCriador.Visible = true;
+                DtReuniao.Text = dr["data"].ToString().Trim();
+                //lblCriador.Visible = true;
+                //txtCriador.Visible = true;
                 txtCriador.Text = dr["nomeCriador"].ToString().Trim();
             }
 
             // Marcando os participantes
-            lstParticipantes.Items.FindByValue(dr["user"].ToString().Trim()).Selected = true;
+            //lstParticipantes.Items.FindByValue(dr["usu"].ToString().Trim()).Selected = true;
+            CheckBoxList1.Items.FindByValue(dr["usu"].ToString().Trim()).Selected = true;
         }
         dr.Close();
         dados.CloseDataSource();
@@ -57,7 +60,8 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
         while (dr.Read())
         {
             ListItem li = new ListItem(dr["nome"].ToString().Trim(), dr["id"].ToString());
-            lstParticipantes.Items.Add(li);
+           // lstParticipantes.Items.Add(li);
+            CheckBoxList1.Items.Add(li);
         }
         dr.Close();
         dados.CloseDataSource();
@@ -112,11 +116,19 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                 id = dados.InsertSqlDatatransacao(sql).ToString();
 
                 // Inserindo os participantes da reunião
-                for (int i = 0; i <= lstParticipantes.Items.Count - 1; i++)
+                for (int i = 0; i <= CheckBoxList1.Items.Count - 1; i++)
                 {
-                    ListItem li = lstParticipantes.Items[i];
+                   // ListItem li = lstParticipantes.Items[i];
+                   // if (li.Selected)
+                   // {
+                   //     sql = " INSERT INTO Participantes(idReuniao,idUsuario) " +
+                   //         " VALUES(" + id + "," + Util.SQLString(li.Value.ToString()) + ")";
+                   //     dados.InsertSqlDatatransacao(sql);
+                   // }
+                    ListItem li = CheckBoxList1.Items[i];
                     if (li.Selected)
                     {
+                        
                         sql = " INSERT INTO Participantes(idReuniao,idUsuario) " +
                             " VALUES(" + id + "," + Util.SQLString(li.Value.ToString()) + ")";
                         dados.InsertSqlDatatransacao(sql);
@@ -139,9 +151,9 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                 dados.DeleteSQLDataTransaction(sql);
 
                 // Inserindo os novos participantes da reunião
-                for (int i = 0; i <= lstParticipantes.Items.Count - 1; i++)
+                for (int i = 0; i <= CheckBoxList1.Items.Count - 1; i++)
                 {
-                    ListItem li = lstParticipantes.Items[i];
+                    ListItem li = CheckBoxList1.Items[i];
                     if (li.Selected)
                     {
                         sql = " INSERT INTO Participantes(idReuniao,idUsuario) " +
