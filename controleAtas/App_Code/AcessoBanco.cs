@@ -55,10 +55,12 @@ namespace AcessoBanco
         public CDataService(String Banco)
         {
             String server, strconn;
-            server = "Eufrasio\\SQLEXPRESS";
+            server = "Local\\SQLEXPRESS";
             string Bancoteste = "ControleAtas";
             strconn = "SERVER=" + server + ";DATABASE=" + Bancoteste + ";";
-            strconn = strconn + "UID=teste;PWD=12345";   
+            //strconn = strconn + "UID=teste;PWD=12345";   
+            
+            strconn = strconn + "Integrated Security=True"; 
             this.m_ConnectionString = strconn;
             OpenDataSource();
         }
