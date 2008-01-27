@@ -37,5 +37,5 @@
     <li id="cr"><a href="reunioes.aspx">Criar Reunião</a></li>
     <li id="cu" style="display: <%=Session["admin"].ToString().Equals("True") ? "block" : "none"%>;">
         <a href="Usuarios.aspx">Criar Usuário</a></li>
-    <li id="ea"><a href="#">Escrever Ata</a></li>
+    <li id="ea"><a href="PesquisarReunioes.aspx?ea=1">Escrever Ata</a></li>
 </ul>
