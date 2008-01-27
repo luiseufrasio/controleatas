@@ -12,9 +12,8 @@ using System.Drawing;
 using System.Data;
 using System.Data.SqlClient;
 using AcessoBanco;
-using System.Text;
 
-public partial class AtaReunicao : System.Web.UI.Page
+public partial class AtaReuniao : System.Web.UI.Page
 {
     String idreuniao;
     Color[] color = new Color[]{
@@ -167,28 +166,31 @@ public partial class AtaReunicao : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
-        //BtVisualiza.Attributes.Add("onclick", "desabilita()");
-       // BtGrava.Attributes.Add("onclick", "desabilita()");
-            
         Session["id"] = "5";
-        idreuniao = Request["id"].ToString();
+        idreuniao = Session["id"].ToString();
         Session["usuario"] = "Thaigo Barcelos";
         //Response.Write(DateTime.Now.Hour.ToString());
         //Response.End();
-        string inicio = "(" + Session["usuario"].ToString() + ")" + "(" + DateTime.Today.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString() + " " + DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ")<br>";
+        string inicio = "<br>(" + Session["usuario"].ToString() + ")" + "(" + DateTime.Today.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString() + " " + DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ")";
        // Response.Write(inicio);
         //Response.End();
         TxtInsere.Attributes.Add("inicio", inicio);
         if (!IsPostBack)
         {
+        
+
+            //Response.Write(color[1].ToKnownColor());
+            
             insere();
         }
     }
     protected void BtGrava_Click(object sender, EventArgs e)
     {
-        String texto = TxtInsere.Attributes["inicio"].ToString().Trim().Normalize() + TxtInsere.Text;
+        String texto = TxtInsere.Attributes["inicio"].ToString() + TxtInsere.Text;
         CDataService dados = new CDataService("atas");
         String teste="select * from atas where idreuniao = " + idreuniao;
+       // Response.Write(teste);
+       // Response.End();
         SqlDataReader dr = dados.SelectSqlReader("select * from atas where idreuniao = " + idreuniao);
         String sql = "";
         if (dr.HasRows)
@@ -200,14 +202,15 @@ public partial class AtaReunicao : System.Web.UI.Page
             sql = "insert into atas(idreuniao,texto,datahora)values(" +idreuniao +","+ Util.SQLString(texto) +", getdate())";
         }
         dr.Close();
+        //Response.Write(sql);
+        //Response.End();
         dados.InsertSqlDataVoid(sql);
         visualiza();
-        
     }
     public void visualiza()
     {
         TxtInsere.Visible = true;
-        TxtInsere.Enabled = false;
+        
         BtInsere.Enabled = true;
         BtGrava.Enabled = false;
         BtVisualiza.Enabled = false;
@@ -221,22 +224,19 @@ public partial class AtaReunicao : System.Web.UI.Page
         {
             TxtInsere.Text="";
         }
-
-        pagina.Attributes.Add("onload", "RTFEdit_TxtInsere.document.designMode='off';");
-
+        TxtInsere.Enabled = false;
     }
     public void insere()
     {
         
         TxtInsere.Visible = true;
         TxtInsere.Enabled = true;
+        TxtInsere.EditorHeight = 50;
+        TxtInsere.EditorWidth = 500;
         BtInsere.Enabled = false;
         BtGrava.Enabled = true;
         BtVisualiza.Enabled = true;
         TxtInsere.Text = "";
-
-        pagina.Attributes.Add("onload", "RTFEdit_TxtInsere.document.designMode='on';");
-        
     }
     protected void BtInsere_Click(object sender, EventArgs e)
     {
