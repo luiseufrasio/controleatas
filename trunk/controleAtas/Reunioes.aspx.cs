@@ -92,6 +92,8 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                 {
                     idCriador = dr["idCriador"].ToString();
                     BtExcluir.Enabled = true;
+                    lblCriador.Visible = true;
+                    txtCriador.Visible = true;
                 }
                 dados.CloseDataSource();
             }
@@ -163,10 +165,10 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
                 }
 
                 Response.Write("<script>alert('Cadastro Atualizado com Sucesso!')</script>");
-                preencher();
             }
 
             dados.committransacao();
+            preencher();
         }
         catch (Exception ex)
         {
@@ -183,6 +185,17 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
     {
         CDataService dados = new CDataService("controleAtas");
 
+        if (idCriador == null || idCriador.Equals(""))
+        {
+            string sql = " Select * From Reunioes Where id = " + id;
+            SqlDataReader dr = dados.SelectSqlReader(sql);
+            if (dr.Read())
+            {
+                idCriador = dr["idCriador"].ToString();
+            }
+            dados.CloseDataSource();
+        }
+
         if (!idCriador.Equals(Session["id"].ToString()))
         {
             Response.Write("<script>alert('Somente o criador da Reunião pode excluí-la!');</script>");
@@ -192,11 +205,11 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
             try
             {
                 dados.OpenDataSource();
-                dados.DeleteSQLData("Update Reunioes Set excluido = True Where id = " + id);
+                dados.DeleteSQLData("Update Reunioes Set excluida = 1 Where id = " + id);
 
                 Response.Write("<script>alert('Cadastro Excluído com Sucesso!');document.location.href='reunioes.aspx';</script>");
             }
-            catch
+            catch (Exception ex)
             {
                 Response.Write("<script>alert('Não foi possível realizar a operação, favor entre em contato com o responsável pelo sistema!')</script>");
             }
