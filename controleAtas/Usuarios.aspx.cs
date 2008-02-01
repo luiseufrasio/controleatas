@@ -60,8 +60,7 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
 
                 string sql =
                     " Select * From Usuarios Where id = " + id +
-                    " and id not in ((select idUsuario From Participantes) " +
-                    " union (select idUsuario From Atas)) ";
+                    " and id not in (select idUsuario From Participantes)";
 
                 if (dados.SelectSqlReader(sql).Read())
                 {

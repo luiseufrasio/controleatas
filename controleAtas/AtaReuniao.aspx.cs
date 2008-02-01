@@ -9,25 +9,25 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Web.UI.HtmlControls;
 using System.Drawing;
-using System.Data;
 using System.Data.SqlClient;
 using AcessoBanco;
 
 public partial class AtaReuniao : System.Web.UI.Page
 {
     String idreuniao;
+    String inicio;
     Color[] color = new Color[]{
 			Color.Blue,
+            Color.Yellow,
 			Color.Brown,
 			Color.DarkBlue,
-		    Color.DarkGreen,
-		    Color.DarkRed,
+		    Color.DarkGreen,		    
 			Color.Green,
 			Color.Red,
 			Color.Silver,
 			Color.SkyBlue,
 			Color.Teal,
-			Color.Yellow,
+            Color.DarkRed,
 			Color.YellowGreen,
             Color.DarkOrange,
             Color.DarkOliveGreen,
@@ -164,86 +164,74 @@ public partial class AtaReuniao : System.Web.UI.Page
 			Color.YellowGreen
 			};
 
-    protected void Page_Load(object sender, EventArgs e)
+    protected void preencher()
     {
-        Session["id"] = "5";
-        idreuniao = Session["id"].ToString();
-        Session["usuario"] = "Thaigo Barcelos";
-        //Response.Write(DateTime.Now.Hour.ToString());
-        //Response.End();
-        string inicio = "<br>(" + Session["usuario"].ToString() + ")" + "(" + DateTime.Today.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString() + " " + DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ")";
-       // Response.Write(inicio);
-        //Response.End();
-        TxtInsere.Attributes.Add("inicio", inicio);
-        if (!IsPostBack)
-        {
-        
+        CDataService dados = new CDataService("controleAtas");
+        string sql = " select texto from atas where idreuniao = " + idreuniao;
 
-            //Response.Write(color[1].ToKnownColor());
-            
-            insere();
-        }
-    }
-    protected void BtGrava_Click(object sender, EventArgs e)
-    {
-        String texto = TxtInsere.Attributes["inicio"].ToString() + TxtInsere.Text;
-        CDataService dados = new CDataService("atas");
-        String teste="select * from atas where idreuniao = " + idreuniao;
-       // Response.Write(teste);
-       // Response.End();
-        SqlDataReader dr = dados.SelectSqlReader("select * from atas where idreuniao = " + idreuniao);
-        String sql = "";
-        if (dr.HasRows)
+        SqlDataReader dr = dados.SelectSqlReader(sql);
+        if (dr.Read())
         {
-            sql = "update atas set texto = texto+" + Util.SQLString(texto) + " where idreuniao = " + idreuniao;
-        }
-        else
-        {
-            sql = "insert into atas(idreuniao,texto,datahora)values(" +idreuniao +","+ Util.SQLString(texto) +", getdate())";
+            Editor2.Text = dr["texto"].ToString();
         }
         dr.Close();
-        //Response.Write(sql);
-        //Response.End();
-        dados.InsertSqlDataVoid(sql);
-        visualiza();
+        dados.CloseDataSource();
     }
-    public void visualiza()
+
+    protected void Page_Load(object sender, EventArgs e)
     {
-        TxtInsere.Visible = true;
-        
-        BtInsere.Enabled = true;
-        BtGrava.Enabled = false;
-        BtVisualiza.Enabled = false;
-        CDataService dados = new CDataService("atas");
-        SqlDataReader dr = dados.SelectSqlReader("select texto from atas where idreuniao="+idreuniao);
-        if(dr.Read())
+        if (Request.QueryString.HasKeys())
         {
-            TxtInsere.Text="<font color = '" + color[int.Parse(Session["id"].ToString())].ToKnownColor().ToString() + "'>"+dr[0].ToString();
+            idreuniao = Request["cod"].ToString();
         }
         else
         {
-            TxtInsere.Text="";
+            idreuniao = "";
         }
-        TxtInsere.Enabled = false;
+
+        inicio = "[";
+        CDataService dados = new CDataService("controleAtas");
+        string sql = " SELECT nome " +
+            " FROM Usuarios u " +
+            " WHERE id = " + Session["id"].ToString();
+
+        SqlDataReader dr = dados.SelectSqlReader(sql);
+        if (dr.Read())
+        {
+            inicio += dr["nome"].ToString().Trim() + "]";
+        }
+        dr.Close();
+        dados.CloseDataSource();
+        inicio += " em (" + DateTime.Today.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString() + " " + DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString() + ":" + DateTime.Now.Second.ToString() + ")";
+
+        if (!IsPostBack)
+        {
+            preencher();
+        }
     }
-    public void insere()
+
+    protected void salvar(object sender, CommandEventArgs e)
     {
+        String texto = "<font color=" + color[int.Parse(Session["id"].ToString())].ToKnownColor().ToString() + ">"
+            + inicio + "<br>" + Editor1.Text + "<br></font>";
+        Editor2.Text += texto;
+        Editor2.Text.Replace("<p>", "");
+        Editor2.Text.Replace("</p>", "");
+        Editor2.Text.Replace("<div>", "");
+        Editor2.Text.Replace("</div>", ""); 
         
-        TxtInsere.Visible = true;
-        TxtInsere.Enabled = true;
-        TxtInsere.EditorHeight = 50;
-        TxtInsere.EditorWidth = 500;
-        BtInsere.Enabled = false;
-        BtGrava.Enabled = true;
-        BtVisualiza.Enabled = true;
-        TxtInsere.Text = "";
-    }
-    protected void BtInsere_Click(object sender, EventArgs e)
-    {
-        insere();
-    }
-    protected void BtVisualiza_Click(object sender, EventArgs e)
-    {
-        visualiza();
+        CDataService dados = new CDataService("atas");
+        SqlDataReader dr = dados.SelectSqlReader("select * from atas where idreuniao = " + idreuniao);
+        string sql = "";
+        if (dr.HasRows)
+        {
+            sql = "update atas set texto = " + Util.SQLString(Editor2.Text) + " where idreuniao = " + idreuniao;
+        }
+        else
+        {
+            sql = "insert into atas(idreuniao,texto,datahora)values(" + idreuniao + "," + Util.SQLString(Editor2.Text) + ", getdate())";
+        }
+        dr.Close();
+        dados.InsertSqlDataVoid(sql);
     }
 }
