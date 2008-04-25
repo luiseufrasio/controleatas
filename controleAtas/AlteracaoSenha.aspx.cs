@@ -23,6 +23,11 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
             txtLogin.Text = dr["login"].ToString().Trim();
             txtNome.Text = dr["nome"].ToString().Trim();
             txtEmail.Text = dr["email"].ToString().Trim();
+
+            if (Session["admin"] != null && "True".Equals(Session["admin"].ToString()))
+            {
+                RequiredFieldValidator1.Enabled = false;
+            }
         }
         dr.Close();
         dados.CloseDataSource();
@@ -33,6 +38,25 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
         if (!IsPostBack)
         {
             preencher();
+
+            if (Session["admin"] != null && "True".Equals(Session["admin"].ToString()))
+            {
+                listNomes.Visible = true;
+                txtNome.Visible = false;
+
+                CDataService dados = new CDataService("controleAtas");
+                SqlDataReader dr = dados.SelectSqlReader("Select id, nome from usuarios order by nome");
+
+                listNomes.DataSource = dr;
+                listNomes.DataValueField = "id";
+                listNomes.DataTextField = "nome";
+                listNomes.DataBind();
+
+                listNomes.SelectedValue = Session["id"].ToString();
+
+                dr.Close();
+                dados.CloseDataSource();
+            }
         }
     }
 
@@ -40,19 +64,22 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
     {
         CDataService dados = new CDataService("controleAtas");
 
-        // Verificar senha atual
-        SqlDataReader dr = dados.SelectSqlReader("Select senha from usuarios where id = " + Session["id"].ToString());
-        if (dr.Read())
+        // Verificar senha atual caso não seja Admin
+        if (Session["admin"] != null && "False".Equals(Session["admin"].ToString()))
         {
-            if (!TxtSenha.Text.Equals(dr["senha"].ToString()))
+            SqlDataReader dr = dados.SelectSqlReader("Select senha from usuarios where id = " + Session["id"].ToString());
+            if (dr.Read())
             {
-                dr.Close();
-                dados.CloseDataSource();
-                Response.Write("<script>alert('A Senha Atual está incorreta. Tente novamente!')</script>");
-                return;
+                if (!TxtSenha.Text.Equals(dr["senha"].ToString()))
+                {
+                    dr.Close();
+                    dados.CloseDataSource();
+                    Response.Write("<script>alert('A Senha Atual está incorreta. Tente novamente!')</script>");
+                    return;
+                }
             }
+            dr.Close();
         }
-        dr.Close();
 
         // Verificar novas senhas
         if (!TxtNovaSenha.Text.Equals(TxtNovaSenha2.Text))
@@ -65,7 +92,18 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
         try
         {
             string sql = "update usuarios set senha = " + Util.SQLString(TxtNovaSenha.Text) +
-                " where id = " + Session["id"].ToString();
+                    " where id = ";
+            
+            // Se é administrador
+            if (Session["admin"] != null && "True".Equals(Session["admin"].ToString()))
+            {
+                sql += listNomes.SelectedValue;
+            }
+            else
+            {
+                sql += Session["id"].ToString();
+            }
+
             dados.UpdateSQLData(sql);
 
             Response.Write("<script>alert('Senha Atualizada com Sucesso!')</script>");
@@ -78,7 +116,17 @@ public partial class ManutencaoOrcamento : System.Web.UI.Page
         {
             dados.CloseDataSource();
         }
-
-        preencher();
+    }
+    protected void listNomes_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CDataService dados = new CDataService("controleAtas");
+        SqlDataReader dr = dados.SelectSqlReader("Select * from usuarios where id = " + listNomes.SelectedValue);
+        if (dr.Read())
+        {
+            txtLogin.Text = dr["login"].ToString().Trim();
+            txtEmail.Text = dr["email"].ToString().Trim();
+        }
+        dr.Close();
+        dados.CloseDataSource();
     }
 }

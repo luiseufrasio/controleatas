@@ -17,7 +17,7 @@
             <div>
                 &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-                <div style="z-index: 113; left: 2%; width: 358px; position: absolute; top: 86%; height: 41px">
+                <div style="z-index: 116; left: 2%; width: 358px; position: absolute; top: 86%; height: 41px">
                     &nbsp;
                     <asp:Button ID="Button7" runat="server" CssClass="button" Style="z-index: 102; left: 0%;
                         position: absolute; top: 44%" Text="Salvar" Width="85px" OnClick="Button7_Click" Height="21px" TabIndex="8" />
@@ -53,14 +53,17 @@
                     top: 120px" Width="320px" MaxLength="20" TabIndex="3" Enabled="False"></asp:TextBox>
                 &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="TxtSenha"
-                    ErrorMessage="* campo obrigatório" Style="z-index: 114; left: 142px; position: absolute;
+                    ErrorMessage="* campo obrigatório" Style="z-index: 112; left: 142px; position: absolute;
                     top: 182px" SetFocusOnError="True"></asp:RequiredFieldValidator>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="TxtNovaSenha"
-                    ErrorMessage="* campo obrigatório" Style="z-index: 114; left: 142px; position: absolute;
+                    ErrorMessage="* campo obrigatório" Style="z-index: 113; left: 142px; position: absolute;
                     top: 221px" SetFocusOnError="True"></asp:RequiredFieldValidator>
                 <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server" ControlToValidate="TxtNovaSenha2"
                     ErrorMessage="* campo obrigatório" Style="z-index: 114; left: 142px; position: absolute;
                     top: 257px" SetFocusOnError="True"></asp:RequiredFieldValidator>
+                <asp:DropDownList ID="listNomes" runat="server" Style="z-index: 110; left: 2%; position: absolute;
+                    top: 45px" Width="324px" AutoPostBack="True" OnSelectedIndexChanged="listNomes_SelectedIndexChanged" Visible="False">
+                </asp:DropDownList>
             </div>
         </fieldset>
         &nbsp;&nbsp;
